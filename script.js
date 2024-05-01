@@ -5,10 +5,11 @@
  * Use this template to get started creating a simple 2D game for the web using P5.js. 
  */
 var gameState = "splash";
+var player1;
+
 function setup() {
-
   createCanvas(600, 400);
-
+  player1 = new Player(width/2, height * 7/8);
 }
 
 function draw() {
@@ -17,19 +18,20 @@ function draw() {
   //splash(); // call the splash screen function (below)
   //play(); // call the play screen function (below)
   //gameOver(); // call the gameOver screen function (below)
-switch(gameState){
-  case "splash" : 
-  splash();
-  break; 
-case "play" :
-  play();
-  break;
-case "gameOver" :
-  gameOver();
-  break;
-default :
- console.log("no match found!"); 
-}
+  switch (gameState)  {
+    case "splash" :
+      splash(); // go to the "splash" screen
+      break;
+    case "play" :
+      play(); // go to the "play" screen
+      break;
+    case "gameOver" :
+      gameOver(); // go to the "game over" screen
+      break;
+    default :
+      console.log("no match found - check your mousePressed() function!");
+  
+  }
 }
 
 function splash() {
@@ -49,7 +51,7 @@ function play() {
   textAlign(CENTER);
   textSize(16);
   text("This is where the Game happens", width / 2, height / 2);
-
+  player1.display();
 }
 
 function gameOver() {
@@ -63,13 +65,42 @@ function gameOver() {
 
 function mousePressed() {
 
-  console.log("click!");
-  if(gameState == "splash"){
-    gameState = "play";
-  } else if(gameState == "play"){
-    gameState = "gameover";
-  }else if(gameState == "gameover"){
-    gameState = "splash";
-  }
+  // console.log("click!");
+  if(gameState == "splash") { 
+    gameState = "play"; 
+} // go to "play"
+else if(gameState == "play") { 
+    gameState = "gameOver"; 
+} // go to "gameOver"
+else if(gameState == "gameOver") { 
+    gameState = "splash"; 
+} // go to "splash"
   console.log(gameState);
 }
+
+function keyPressed() {
+  switch (keyCode){
+    case UP_ARROW :
+        player1.y -= 30;
+        player1.angle = 0;
+        if(player1.y < 0) player1.y = height;
+        break;
+    case DOWN_ARROW :
+        player1.y += 30;
+        player1.angle = PI;
+        if(player1.y > height) player1.y = 0;
+        break;
+    case LEFT_ARROW :
+        player1.x -= 30;
+        player1.angle = PI + HALF_PI;
+        if(player1.x > 0) player1.x = width;
+        break;
+    case RIGHT_ARROW :
+        player1.x += 30;
+        player1.angle = PI/2;
+        if(player1.x > width) player1.x = 0;
+        break;
+      default:
+  }
+  }
+
