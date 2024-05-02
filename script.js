@@ -10,13 +10,14 @@ var timer // lab 15
 var testBox; 
 var dropTimer;
 var presents = new Array(0) // empty array // lab 16
+var score = 0; // lab 17
 
 function setup() {
   createCanvas(600, 400);
   player1 = new Player(width/2, height * 7/8);
   testBox = new Box(width/2, height/3);
 
-  timer = new Timer(10000); 
+  timer = new Timer(15000); 
   dropTimer = new Timer(1000); // 1 second
 
 }
@@ -83,15 +84,21 @@ for(let i = 0; i < presents.length; i++){
 
     if(presents[i].y > height){
       presents.splice(i, 1); //remove it from the array please
+      score --;
     }
+
     let d = dist(presents[i].x, presents[i].y, player1.x, player1.y);
     if(d < 50){
       presents.splice(i, 1);
+      score ++;
     }
 
 } // end of for() loop
 
-text("elapsed time: " + timer.elapsedTime, width/2, 100);
+textAlign(LEFT);
+text("Elapsed time: " + timer.elapsedTime, 20, 20);
+text("Score: " + score, 20, 40);
+
 }
 
 function gameOver() {
@@ -101,6 +108,7 @@ function gameOver() {
   textAlign(CENTER);
   textSize(16);
   text("Game Over!", width / 2, height / 2);
+  text("Your Final Score: + score, width/2, height * 2/3");
 }
 
 function mousePressed() {
@@ -110,6 +118,7 @@ function mousePressed() {
     gameState = "play"; 
     timer.start();
     dropTimer.start();
+    score = 0; // reset the timer
 } // go to "play"
 else if(gameState == "play") { 
     gameState = "gameOver"; 
