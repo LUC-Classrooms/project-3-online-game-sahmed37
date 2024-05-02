@@ -7,12 +7,17 @@
 var gameState = "splash"; // lab 13
 var player1; // lab 14
 var timer // lab 15
+var testBox; 
+var dropTimer;
+var presents = new Array(0) // empty array // lab 16
 
 function setup() {
   createCanvas(600, 400);
   player1 = new Player(width/2, height * 7/8);
+  testBox = new Box(width/2, height/3);
 
   timer = new Timer(10000); 
+  dropTimer = new Timer(1000); // 1 second
 
 }
 
@@ -46,6 +51,9 @@ function splash() {
   text("Let's Play a Game!", width / 2, height / 2);
   textSize(12);
   text("(click the mouse to continue)", width / 2, height / 2 + 30);
+  testBox.display();
+  testBox.spin();
+  //testBox.move();
 }
 
 function play() {
@@ -61,6 +69,27 @@ function play() {
 if(timer.isFinished()){
   gameState = "gameOver";
 }
+
+if(dropTimer.isFinished()){
+    let p = new Box(random(width), -40);
+    presents.push(p); // add p to the array
+    dropTimer.start();
+}
+
+for(let i = 0; i < presents.length; i++){
+    presents[i].display();
+    presents[i].move();
+    presents[i].spin();
+
+    if(presents[i].y > height){
+      presents.splice(i, 1); //remove it from the array please
+    }
+    let d = dist(presents[i].x, presents[i].y, player1.x, player1.y);
+    if(d < 50){
+      presents.splice(i, 1);
+    }
+
+} // end of for() loop
 
 text("elapsed time: " + timer.elapsedTime, width/2, 100);
 }
@@ -80,6 +109,7 @@ function mousePressed() {
   if(gameState == "splash") { 
     gameState = "play"; 
     timer.start();
+    dropTimer.start();
 } // go to "play"
 else if(gameState == "play") { 
     gameState = "gameOver"; 
